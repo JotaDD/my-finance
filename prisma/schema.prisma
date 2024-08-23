@@ -22,3 +22,18 @@ model User {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @default(now())
 }
+
+model IncomeCategory {
+  id     String   @id @unique @default(uuid())
+  name   String   @unique
+  income Income[]
+}
+
+model Income {
+  id          String @id @unique @default(uuid())
+  payDay      String
+  description String
+
+  incomeCategory   IncomeCategory @relation(fields: [incomeCategoryId], references: [id])
+  incomeCategoryId String         @unique
+}
