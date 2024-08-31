@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,9 +18,10 @@ export class UserController {
   constructor(private readonly userService: UserService) { }
 
   @Post('signup')
-  create(@Body() createUserDto: CreateUserDto) {
-    const password = encodePassword(createUserDto.password);
-    return this.userService.create({ password, ...createUserDto });
+  async create(@Body() createUserDto: CreateUserDto) {
+    const password = await encodePassword(createUserDto.password);
+
+    return await this.userService.create({ ...createUserDto, password });
   }
 
   @Get()
@@ -27,9 +29,13 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Get('email')
+  async findOne(@Body() data) {
+    try {
+      return await this.userService.findByEmail(data.email);
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
   }
 
   @Patch(':id')

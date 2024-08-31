@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { UserService } from 'src/app/user/user.service';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
-import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -10,5 +10,5 @@ export class AuthService {
   ) {}
 
   //TODO:
-  async validateUser(email: string, password: string) {}
+  //async validateUser(email: string, password: string) {}
 }
